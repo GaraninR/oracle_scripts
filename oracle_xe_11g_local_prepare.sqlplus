@@ -1,0 +1,338 @@
+-- For sqlcl/PowerShell:
+-- echo exit | sqlplus . AS SYSDBA/123456@127.0.0.1 '@oracle_xe_11g_local_prepare.sqlplus'
+-- echo exit | sqlplus sys/123456 as sysdba @oracle_xe_11g_local_prepare.sqlplus
+
+-- ### STEP 1 ####################################################### 
+
+SHUTDOWN IMMEDIATE;
+STARTUP MOUNT;
+ALTER SYSTEM ENABLE RESTRICTED SESSION;
+ALTER DATABASE OPEN;
+-- ALTER DATABASE CHARACTER SET INTERNAL_USE CL8MSWIN1251;
+ALTER PROFILE DEFAULT LIMIT password_life_time UNLIMITED;
+ALTER PROFILE DEFAULT LIMIT PASSWORD_VERIFY_FUNCTION NULL;
+ALTER PROFILE DEFAULT LIMIT PASSWORD_REUSE_TIME UNLIMITED;
+
+-- ### STEP 2 ####################################################### 
+-- default sys password is '123456'
+
+ALTER USER SYS IDENTIFIED BY 123456 ACCOUNT UNLOCK;
+ALTER USER SYSTEM IDENTIFIED BY 123456 ACCOUNT UNLOCK;
+
+-- права администратора назначаем пользователю SYS
+GRANT SYSDBA to SYS;
+GRANT SYSOPER to SYS;
+
+-- ### STEP 3 ####################################################### 
+
+-- scott/tiger
+
+CREATE BIGFILE TABLESPACE scott
+  DATAFILE 'scott.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+
+CREATE TEMPORARY TABLESPACE tbs_scott
+  TEMPFILE 'tbs_scott.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+
+CREATE USER scott
+  IDENTIFIED BY tiger
+  DEFAULT TABLESPACE scott
+  TEMPORARY TABLESPACE tbs_scott
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO scott;
+  GRANT RESOURCE TO scott;
+  GRANT CREATE VIEW TO scott;
+  ALTER USER scott QUOTA UNLIMITED ON USERS;
+  -- fix warning ARJUNA016027
+  GRANT SELECT ON sys.dba_pending_transactions TO scott;
+  GRANT SELECT ON sys.pending_trans$ TO scott;
+  GRANT SELECT ON sys.dba_2pc_pending TO scott;
+  GRANT EXECUTE ON sys.dbms_xa TO scott;
+  GRANT FORCE ANY TRANSACTION TO scott;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO scott;
+
+-- node1
+
+CREATE BIGFILE TABLESPACE node1
+  DATAFILE 'node1.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node1
+  TEMPFILE 'tbs_node1.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node1
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node1
+  TEMPORARY TABLESPACE tbs_node1
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node1;
+  GRANT RESOURCE TO node1;
+  GRANT CREATE VIEW TO node1;
+  ALTER USER node1 QUOTA UNLIMITED ON USERS;
+  -- fix warning ARJUNA016027
+  GRANT SELECT ON sys.dba_pending_transactions TO node1;
+  GRANT SELECT ON sys.pending_trans$ TO node1;
+  GRANT SELECT ON sys.dba_2pc_pending TO node1;
+  GRANT EXECUTE ON sys.dbms_xa TO node1;
+  GRANT FORCE ANY TRANSACTION TO node1;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node1;
+
+-- node2  
+
+CREATE BIGFILE TABLESPACE node2
+  DATAFILE 'node2.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node2
+  TEMPFILE 'tbs_node2.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node2
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node2
+  TEMPORARY TABLESPACE tbs_node2
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node2;
+  GRANT RESOURCE TO node2;
+  GRANT CREATE VIEW TO node2;
+  ALTER USER node2 QUOTA UNLIMITED ON USERS;
+  -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node2;
+  GRANT SELECT ON sys.pending_trans$ TO node2;
+  GRANT SELECT ON sys.dba_2pc_pending TO node2;
+  GRANT EXECUTE ON sys.dbms_xa TO node2;
+  GRANT FORCE ANY TRANSACTION TO node2;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node2;
+
+-- node3 
+
+CREATE BIGFILE TABLESPACE node3
+  DATAFILE 'node3.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node3
+  TEMPFILE 'tbs_node3.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node3
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node3
+  TEMPORARY TABLESPACE tbs_node3
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node3;
+  GRANT RESOURCE TO node3;
+  GRANT CREATE VIEW TO node3;
+  ALTER USER node3 QUOTA UNLIMITED ON USERS;
+   -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node3;
+  GRANT SELECT ON sys.pending_trans$ TO node3;
+  GRANT SELECT ON sys.dba_2pc_pending TO node3;
+  GRANT EXECUTE ON sys.dbms_xa TO node3;
+  GRANT FORCE ANY TRANSACTION TO node3;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node3;
+  
+-- node4 
+
+CREATE BIGFILE TABLESPACE node4
+  DATAFILE 'node4.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node4
+  TEMPFILE 'tbs_node4.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node4
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node4
+  TEMPORARY TABLESPACE tbs_node4
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node4;
+  GRANT RESOURCE TO node4;
+  GRANT CREATE VIEW TO node4;
+  ALTER USER node4 QUOTA UNLIMITED ON USERS;
+  -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node4;
+  GRANT SELECT ON sys.pending_trans$ TO node4;
+  GRANT SELECT ON sys.dba_2pc_pending TO node4;
+  GRANT EXECUTE ON sys.dbms_xa TO node4;
+  GRANT FORCE ANY TRANSACTION TO node4;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node4;
+  
+-- node5
+
+CREATE BIGFILE TABLESPACE node5
+  DATAFILE 'node5.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node5
+  TEMPFILE 'tbs_node5.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node5
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node5
+  TEMPORARY TABLESPACE tbs_node5
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node5;
+  GRANT RESOURCE TO node5;
+  GRANT CREATE VIEW TO node5;
+  ALTER USER node5 QUOTA UNLIMITED ON USERS;
+  -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node5;
+  GRANT SELECT ON sys.pending_trans$ TO node5;
+  GRANT SELECT ON sys.dba_2pc_pending TO node5;
+  GRANT EXECUTE ON sys.dbms_xa TO node5;
+  GRANT FORCE ANY TRANSACTION TO node5;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node5;
+  
+  
+-- node6
+
+CREATE BIGFILE TABLESPACE node6
+  DATAFILE 'node6.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node6
+  TEMPFILE 'tbs_node6.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node6
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node6
+  TEMPORARY TABLESPACE tbs_node6
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node6;
+  GRANT RESOURCE TO node6;
+  GRANT CREATE VIEW TO node6;
+  ALTER USER node6 QUOTA UNLIMITED ON USERS;
+  -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node6;
+  GRANT SELECT ON sys.pending_trans$ TO node6;
+  GRANT SELECT ON sys.dba_2pc_pending TO node6;
+  GRANT EXECUTE ON sys.dbms_xa TO node6;
+  GRANT FORCE ANY TRANSACTION TO node6;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node6;
+  
+  
+-- node7
+
+CREATE BIGFILE TABLESPACE node7
+  DATAFILE 'node7.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node7
+  TEMPFILE 'tbs_node7.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node7
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node7
+  TEMPORARY TABLESPACE tbs_node7
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node7;
+  GRANT RESOURCE TO node7;
+  GRANT CREATE VIEW TO node7;
+  ALTER USER node7 QUOTA UNLIMITED ON USERS;
+  -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node7;
+  GRANT SELECT ON sys.pending_trans$ TO node7;
+  GRANT SELECT ON sys.dba_2pc_pending TO node7;
+  GRANT EXECUTE ON sys.dbms_xa TO node7;
+  GRANT FORCE ANY TRANSACTION TO node7;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node7;
+  
+  
+-- node8
+
+CREATE BIGFILE TABLESPACE node8
+  DATAFILE 'node8.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node8
+  TEMPFILE 'tbs_node8.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node8
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node8
+  TEMPORARY TABLESPACE tbs_node8
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node8;
+  GRANT RESOURCE TO node8;
+  GRANT CREATE VIEW TO node8;
+  ALTER USER node8 QUOTA UNLIMITED ON USERS;
+  -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node8;
+  GRANT SELECT ON sys.pending_trans$ TO node8;
+  GRANT SELECT ON sys.dba_2pc_pending TO node8;
+  GRANT EXECUTE ON sys.dbms_xa TO node8;
+  GRANT FORCE ANY TRANSACTION TO node8;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node8;
+  
+  
+-- node9
+
+CREATE BIGFILE TABLESPACE node9
+  DATAFILE 'node9.dat'
+    SIZE 200M
+    AUTOEXTEND ON;
+       
+CREATE TEMPORARY TABLESPACE tbs_node9
+  TEMPFILE 'tbs_node9.dbf'
+    SIZE 200M
+    AUTOEXTEND ON;
+    
+CREATE USER node9
+  IDENTIFIED BY 123456
+  DEFAULT TABLESPACE node9
+  TEMPORARY TABLESPACE tbs_node9
+  ACCOUNT UNLOCK;
+  GRANT CONNECT TO node9;
+  GRANT RESOURCE TO node9;
+  GRANT CREATE VIEW TO node9;
+  ALTER USER node8 QUOTA UNLIMITED ON USERS;
+  -- 
+  GRANT SELECT ON sys.dba_pending_transactions TO node9;
+  GRANT SELECT ON sys.pending_trans$ TO node9;
+  GRANT SELECT ON sys.dba_2pc_pending TO node9;
+  GRANT EXECUTE ON sys.dbms_xa TO node9;
+  GRANT FORCE ANY TRANSACTION TO node9;
+  --
+  GRANT EXECUTE ON sys.dbms_system TO node9;
+
+COMMIT;
+
+-- ### STEP 5 ####################################################### 
+-- reboot RDBMS
+SHUTDOWN;
+STARTUP;
+/
